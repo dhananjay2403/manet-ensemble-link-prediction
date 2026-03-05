@@ -1,28 +1,23 @@
 import pandas as pd
+import numpy as np
 
 INPUT_FILE = "dataset/manet_raw_dataset.csv"
 OUTPUT_FILE = "dataset/manet_dataset.csv"
 
-print("Loading dataset...")
-
 df = pd.read_csv(INPUT_FILE)
 
-print("Rows loaded:", len(df))
-
-# Link failure rule based on signal + density
-df["link_failure"] = (
+# base failure condition
+base_failure = (
     (df["avg_rssi"] < -75) |
     (df["neighbor_count"] < 2)
-).astype(int)
-
-# reliability score (optional)
-df["reliability_score"] = (
-    df["neighbor_count"] / (df["neighbor_count"].max() + 1)
 )
 
-print("Failure distribution:")
-print(df["link_failure"].value_counts())
+# introduce randomness (10%)
+noise = np.random.rand(len(df)) < 0.10
+
+df["link_failure"] = (base_failure ^ noise).astype(int)
 
 df.to_csv(OUTPUT_FILE, index=False)
 
-print("ML dataset saved to:", OUTPUT_FILE)
+print("Dataset saved:", OUTPUT_FILE)
+print(df["link_failure"].value_counts())
