@@ -13,4 +13,5 @@ __pycache__/
 
 # Generated XML datasets (FlowMonitor + other dataset XMLs)
 dataset/manet_flowmon_*.xml
+dataset/positions_run*.csv
 dataset/*.xml
