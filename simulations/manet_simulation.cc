@@ -6,6 +6,7 @@
 #include "ns3/aodv-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/flow-monitor-module.h"
+#include "ns3/netanim-module.h"
 
 #include <fstream>
 #include <iomanip>
@@ -193,6 +194,8 @@ int main(int argc, char *argv[])
 
     // Run
     Simulator::Stop(Seconds(simTimeSeconds));
+
+    AnimationInterface anim("manet_animation.xml");
     Simulator::Run();
 
     // Serialize flow monitor output to outDir with run id
