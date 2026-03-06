@@ -40,7 +40,7 @@ class LinkFailurePredictor:
         rf_probs = self.rf.predict_proba(X_df)[:, 1]
 
         # Neural Network probabilities
-        nn_probs = self.nn.predict(X_df.values).flatten()
+        nn_probs = self.nn.predict(X_df.values, verbose = 0).flatten()
 
         # Ensemble prediction
         ensemble_probs = (0.4 * rf_probs) + (0.6 * nn_probs)
