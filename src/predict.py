@@ -25,10 +25,11 @@ class LinkFailurePredictor:
             raise FileNotFoundError(f"Neural Network model not found: {nn_path}")
 
         self.rf = joblib.load(rf_path)
+
         self.nn = keras.models.load_model(nn_path, compile = False)
 
         print("Models loaded successfully.")
-
+        
 
     def predict(self, X):
 
@@ -36,13 +37,13 @@ class LinkFailurePredictor:
 
         X_df = pd.DataFrame(X, columns=feature_names)
 
-        # Random Forest probabilities
-        rf_probs = self.rf.predict_proba(X_df)[:, 1]
+        # Random Forest
+        rf_probs = self.rf.predict_proba(X_df)[:,1]
 
-        # Neural Network probabilities
-        nn_probs = self.nn.predict(X_df.values, verbose = 0).flatten()
+        # Neural Network
+        nn_probs = self.nn(X_df.values).numpy().flatten()
 
-        # Ensemble prediction
+        # Ensemble
         ensemble_probs = (0.4 * rf_probs) + (0.6 * nn_probs)
 
         reliability = 1 - ensemble_probs
@@ -52,10 +53,8 @@ class LinkFailurePredictor:
 
 if __name__ == "__main__":
 
-    # Example usage
     predictor = LinkFailurePredictor()
 
-    # Example network state
     sample = np.array([
         [3, 120, 200, 10],   # neighbor_count, x, y, time
         [1, 450, 300, 15]
