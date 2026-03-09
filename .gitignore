@@ -15,3 +15,7 @@ __pycache__/
 dataset/manet_flowmon_*.xml
 dataset/positions_run*.csv
 dataset/*.xml
+
+SS_and_Videos/
+research paper/
+netanim/
