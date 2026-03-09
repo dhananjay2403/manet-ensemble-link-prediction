@@ -19,3 +19,5 @@ dataset/*.xml
 SS_and_Videos/
 research paper/
 netanim/
+
+ui/
