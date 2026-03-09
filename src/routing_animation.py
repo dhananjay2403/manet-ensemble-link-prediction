@@ -19,6 +19,7 @@ class MANETAnimation:
 
         self.times = sorted(self.df["time"].unique())
 
+
     def build_graph(self, snapshot, radius = 100):
 
         G = nx.Graph()
@@ -45,7 +46,7 @@ class MANETAnimation:
                 x1, y1 = rows[i]["x"], rows[i]["y"]
                 x2, y2 = rows[j]["x"], rows[j]["y"]
 
-                dist = np.sqrt((x1 - x2)**2 + (y1 - y2) ** 2)
+                dist = np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
 
                 if dist <= radius:
 
@@ -56,26 +57,27 @@ class MANETAnimation:
                         rows[i]["time"]
                     ]
 
-                    edge_pairs.append((n1,n2))
+                    edge_pairs.append((n1, n2))
                     edge_features.append(features)
 
         if len(edge_features) > 0:
 
             X = np.array(edge_features)
 
-            reliabilities,_ = self.predictor.predict(X)
+            reliabilities, _ = self.predictor.predict(X)
 
-            for (u,v), r in zip(edge_pairs, reliabilities):
+            for (u, v), r in zip(edge_pairs, reliabilities):
 
-                weight = 1/(float(r) + 1e-6)
+                weight = 1 / (float(r) + 1e-6)
 
-                G.add_edge(u,v, weight = weight, reliability = float(r))
+                G.add_edge(u, v, weight=weight, reliability=float(r))
 
         return G
 
+
     def animate(self):
 
-        fig, ax = plt.subplots(figsize = (8,6))
+        fig, ax = plt.subplots(figsize = (8, 6))
 
         def update(frame):
 
@@ -89,20 +91,28 @@ class MANETAnimation:
 
             pos = {}
 
-            for _,row in snapshot.iterrows():
+            for _, row in snapshot.iterrows():
                 pos[int(row["node_id"])] = (row["x"], row["y"])
 
             source = 0
             target = 5
 
+            # ML reliability path
             try:
-                path = nx.shortest_path(G, source, target, weight="weight")
-            except:
-                path = None
+                ml_path = nx.shortest_path(G, source, target, weight = "weight")
+            except nx.NetworkXNoPath:
+                ml_path = None
 
+            # Baseline shortest-hop path
+            try:
+                baseline_path = nx.shortest_path(G, source, target)
+            except nx.NetworkXNoPath:
+                baseline_path = None
+
+            # Draw nodes
             nx.draw_networkx_nodes(G, pos, node_size = 150, ax = ax)
 
-            # reliability-based edge colors
+            # Edge coloring by reliability
             edge_colors = []
             edge_widths = []
 
@@ -113,9 +123,11 @@ class MANETAnimation:
                 if r > 0.8:
                     edge_colors.append("green")
                     edge_widths.append(2)
+
                 elif r > 0.5:
                     edge_colors.append("orange")
                     edge_widths.append(1.5)
+
                 else:
                     edge_colors.append("red")
                     edge_widths.append(0.8)
@@ -129,29 +141,48 @@ class MANETAnimation:
                 ax = ax
             )
 
-            nx.draw_networkx_labels(G, pos, font_size = 8, ax = ax)
+            # Draw baseline route (purple)
+            if baseline_path:
 
-            if path:
-
-                route_edges = list(zip(path[:-1],path[1:]))
+                baseline_edges = list(zip(baseline_path[:-1], baseline_path[1:]))
 
                 nx.draw_networkx_edges(
                     G,
                     pos,
-                    edgelist = route_edges,
+                    edgelist = baseline_edges,
+                    width = 2,
+                    edge_color = "purple",
+                    ax = ax
+                )
+
+            # Draw ML route (blue)
+            if ml_path:
+
+                ml_edges = list(zip(ml_path[:-1], ml_path[1:]))
+
+                nx.draw_networkx_edges(
+                    G,
+                    pos,
+                    edgelist = ml_edges,
                     width = 3,
                     edge_color = "blue",
                     ax = ax
                 )
 
-            ax.set_title(f"ML Routing at time = {t}")
+            nx.draw_networkx_labels(G, pos, font_size = 8, ax = ax)
+
+            ax.set_title(
+                f"MANET Routing | time={t} | blue=ML route | purple=baseline"
+            )
+
             ax.axis("off")
+
 
         anim = FuncAnimation(
             fig,
             update,
-            frames = len(self.times),
-            interval = 500
+            frames=len(self.times),
+            interval=500
         )
 
         plt.show()
