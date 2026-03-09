@@ -19,7 +19,7 @@ class MANETAnimation:
 
         self.times = sorted(self.df["time"].unique())
 
-    def build_graph(self, snapshot, radius = 150):
+    def build_graph(self, snapshot, radius = 100):
 
         G = nx.Graph()
 
@@ -38,6 +38,9 @@ class MANETAnimation:
 
                 n1 = int(rows[i]["node_id"])
                 n2 = int(rows[j]["node_id"])
+
+                if n1 == n2:
+                    continue
 
                 x1, y1 = rows[i]["x"], rows[i]["y"]
                 x2, y2 = rows[j]["x"], rows[j]["y"]
@@ -97,9 +100,36 @@ class MANETAnimation:
             except:
                 path = None
 
-            nx.draw_networkx_nodes(G,pos,node_size = 250,ax = ax)
-            nx.draw_networkx_edges(G,pos,alpha = 0.3,ax = ax)
-            nx.draw_networkx_labels(G,pos,font_size = 8,ax = ax) 
+            nx.draw_networkx_nodes(G, pos, node_size = 150, ax = ax)
+
+            # reliability-based edge colors
+            edge_colors = []
+            edge_widths = []
+
+            for u, v, data in G.edges(data = True):
+
+                r = data["reliability"]
+
+                if r > 0.8:
+                    edge_colors.append("green")
+                    edge_widths.append(2)
+                elif r > 0.5:
+                    edge_colors.append("orange")
+                    edge_widths.append(1.5)
+                else:
+                    edge_colors.append("red")
+                    edge_widths.append(0.8)
+
+            nx.draw_networkx_edges(
+                G,
+                pos,
+                edge_color = edge_colors,
+                width = edge_widths,
+                alpha = 0.5,
+                ax = ax
+            )
+
+            nx.draw_networkx_labels(G, pos, font_size = 8, ax = ax)
 
             if path:
 
