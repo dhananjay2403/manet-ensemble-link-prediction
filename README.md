@@ -1,4 +1,4 @@
-# RouteCast | Reliability-Aware Routing for MANETs
+<h1 align="center">RouteCast | Reliability-Aware Routing for MANETs</h1>
 
 <p align="center">
 
@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-Predicting unreliable wireless links and using those predictions to choose more stable routes in dynamic mobile networks.
+Predicting unreliable wireless links to choose more stable routes in mobile networks.
 </p>
 
 ---
@@ -41,21 +41,27 @@ By incorporating predicted link reliability into routing decisions, the system c
 
 `![demo](assets/demo.gif)`
 
-
-**Link colors**
-
-| Color | Meaning |
-|------|------|
-| 🟢 | Reliable link |
-| 🟠 | Medium reliability |
-| 🔴 | Unstable link |
-
-**Routing paths**
-
-| Color | Meaning |
-|------|------|
-| 🔵 | ML-selected route |
-| 🟣 | Baseline shortest-path route |
+<table align="center">
+  <tr>
+    <td valign="top">
+      <div align="center"><strong>Link colors</strong></div>
+      <table>
+        <tr><th>Color</th><th>Meaning</th></tr>
+        <tr><td>🟢</td><td>Reliable link</td></tr>
+        <tr><td>🟠</td><td>Medium reliability</td></tr>
+        <tr><td>🔴</td><td>Unstable link</td></tr>
+      </table>
+    </td>
+    <td valign="top">
+      <div align="center"><strong>Routing paths</strong></div>
+      <table>
+        <tr><th>Color</th><th>Meaning</th></tr>
+        <tr><td>🔵</td><td>ML-selected route</td></tr>
+        <tr><td>🟣</td><td>Baseline shortest-path route</td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
 ---
 
