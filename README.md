@@ -1,141 +1,200 @@
-# Machine Learning–Driven Link Reliability Prediction for MANET Routing
+# RouteCast | Reliability-Aware Routing for MANETs
 
 <p align="center">
-ML-assisted routing framework for Mobile Ad Hoc Networks using simulation, ensemble learning, and reliability-aware graph algorithms.
+
+<img src="https://img.shields.io/badge/Python-3.11-blue?logo=python">
+<img src="https://img.shields.io/badge/Framework-TensorFlow-orange?logo=tensorflow">
+<img src="https://img.shields.io/badge/ML-ScikitLearn-F7931E?logo=scikitlearn">
+<img src="https://img.shields.io/badge/Simulation-NS--3-green">
+<img src="https://img.shields.io/badge/Visualization-Matplotlib-blue">
+
+</p>
+
+<p align="center">
+Predicting unreliable wireless links and using those predictions to choose more stable routes in dynamic mobile networks.
 </p>
 
 ---
 
-## Overview
+## Project Overview
 
-Mobile Ad Hoc Networks (MANETs) operate in highly dynamic environments where wireless links frequently degrade or fail due to mobility and interference. Traditional routing algorithms typically assume uniform link reliability, which can lead to unstable routes.
+Mobile Ad Hoc Networks (MANETs) are decentralized wireless networks where nodes communicate directly without fixed infrastructure. Because nodes are constantly moving, wireless links frequently degrade or fail.
 
-This project introduces a **machine learning–assisted routing framework** that predicts link reliability and integrates those predictions into routing decisions.
+Traditional routing algorithms (like shortest-path routing) assume all links are equally reliable. In highly dynamic MANET environments, this assumption often leads to unstable routes and frequent packet loss.
 
-The system combines **network simulation, machine learning, and graph algorithms** to evaluate how reliability-aware routing compares against traditional shortest-path routing.
+**RouteCast** introduces a machine learning–assisted routing approach that predicts link reliability and integrates those predictions into routing decisions.
 
----
+The pipeline combines:
 
-## System Architecture
-# Machine Learning–Driven Link Reliability Prediction for MANET Routing
+- **NS-3 network simulation** to generate realistic MANET mobility traces  
+- **Machine learning models** to predict link reliability  
+- **Reliability-weighted routing** to avoid unstable links  
 
-<p align="center">
-ML-assisted routing framework for Mobile Ad Hoc Networks using simulation, ensemble learning, and reliability-aware graph algorithms.
-</p>
-
----
-
-## Overview
-
-Mobile Ad Hoc Networks (MANETs) operate in highly dynamic environments where wireless links frequently degrade or fail due to mobility and interference. Traditional routing algorithms typically assume uniform link reliability, which can lead to unstable routes.
-
-This project introduces a **machine learning–assisted routing framework** that predicts link reliability and integrates those predictions into routing decisions.
-
-The system combines **network simulation, machine learning, and graph algorithms** to evaluate how reliability-aware routing compares against traditional shortest-path routing.
+By incorporating predicted link reliability into routing decisions, the system can select **more stable routes compared to traditional shortest-path routing.**
 
 ---
 
-## System Architecture
+## Demo
+
+*(Add your animation GIF here)*
 
 
-NS-3 MANET Simulation
-        ↓
-Dataset Generation
-        ↓
-Feature Extraction
-        ↓
-ML Link Failure Prediction
-(Random Forest + Neural Network)
-        ↓
-Reliability-Weighted Routing
-(Dijkstra)
-        ↓
-Dynamic Network Visualization
+`![demo](assets/demo.gif)`
 
-
----
-
-## Key Features
-
-- **ML-assisted routing** using link reliability prediction  
-- **Ensemble model** combining Random Forest and Neural Network  
-- **MANET simulation** with dynamic node mobility  
-- **Routing comparison** between ML-driven and baseline shortest-path routing  
-- **Animated network topology visualization**  
-- **Quantitative evaluation of routing reliability over time**
-
----
-
-## Visualization
-
-The system animates the network topology and routing behavior over time.
 
 **Link colors**
 
-- 🟢 Reliable link  
-- 🟠 Medium reliability  
-- 🔴 Unstable link  
+| Color | Meaning |
+|------|------|
+| 🟢 | Reliable link |
+| 🟠 | Medium reliability |
+| 🔴 | Unstable link |
 
 **Routing paths**
 
-- 🔵 ML-selected route  
-- 🟣 Baseline shortest-path route  
-
-The project also generates a **reliability comparison plot**, showing how ML-based routing performs relative to traditional routing across simulation timesteps.
-
----
-
-## Technologies
-
-- NS-3 Network Simulator  
-- NetAnim (network simulation visualization)
-- Python  
-- Scikit-learn  
-- TensorFlow / Keras  
-- NetworkX  
-- NumPy, Pandas, Matplotlib  
+| Color | Meaning |
+|------|------|
+| 🔵 | ML-selected route |
+| 🟣 | Baseline shortest-path route |
 
 ---
 
-## Running the Project
+## Architecture
+Add the architecture image at `assets/architecture.jpg`. 
 
-Create a virtual environment:
+Flow (left → right):  
+`ns-3 simulation → dataset (XML→CSV) → feature extraction (neighbor_count, x, y, t) → RandomForest & NeuralNet → ensemble → reliability-weighted Dijkstra → visualization (Matplotlib / NetAnim)`
+
+Also add:
+1️⃣ **Architecture diagram**  
+2️⃣ **Routing animation GIF**  
+3️⃣ **Reliability comparison plot**
+
+---
+
+## Running the project
 
 ```bash
+# 1. create a virtual environment
 python -m venv venv
 source venv/bin/activate
+```
+
+```bash
+# 2. install dependencies
 pip install -r requirements.txt
 ```
 
-Run the routing animation:
 ```bash
+# 3. run the MANET routing animation (uses dataset/manet_dataset.csv)
 python src/routing_animation.py
 ```
 
+```bash
+# 4. you can also explore model training and evaluation:
+jupyter lab notebooks/training.ipynb
+```
 
-This will:
+If you want to re-run simulations with your local ns-3:
 
-1. Animate the MANET topology  
-2. Show ML and baseline routing paths  
-3. Generate a reliability comparison plot.
-
----
-
-## Results
-
-The ML-assisted routing approach demonstrates:
-
-- improved route reliability in many network conditions
-- adaptive routing decisions as topology changes
-- better avoidance of unstable links compared to baseline routing
+```bash
+# copy simulation to your ns-3 scratch folder (script already does this)
+./scripts/run_simulations.sh
+```
 
 ---
 
-## Future Work
+## Dataset (summary)
 
-Potential extensions include:
+<!-- - ~54,000 samples from 30 runs (30 runs × 1,800 samples each)
+- Features: neighbor_count, x, y, time
+- Target: link_failure (binary, thresholded on lost packets) -->
 
-- incorporating additional wireless features (RSSI, link duration, signal strength)
-- exploring reinforcement learning or evolutionary routing algorithms
-- evaluating scalability across larger network sizes
-- integrating routing decisions directly into NS-3 protocols
+
+| Property | Value |
+|--------|--------|
+| Simulation runs | 30 |
+| Nodes | 30 |
+| Timesteps | 60 |
+| Total samples | ~54,000 |
+
+### Features
+
+| Feature | Description |
+|------|------|
+| neighbor_count | number of neighboring nodes |
+| x, y | node position |
+| time | simulation timestep |
+
+### Target
+
+| Label | Meaning |
+|------|------|
+| link_failure | binary indicator of link breakage |
+
+
+
+---
+
+## Key Contributions
+
+• Built a full pipeline from **network simulation → dataset generation → ML model training → routing evaluation**
+
+• Designed an **ensemble model (Random Forest + Neural Network)** to predict MANET link reliability
+
+• Integrated ML predictions into **reliability-weighted Dijkstra routing**
+
+• Demonstrated **~10% improvement in route reliability** over traditional shortest-path routing
+
+• Developed a **dynamic MANET topology visualization** to compare routing strategies
+
+---
+
+## Results (summary)
+
+#### Model Performance
+
+| Metric | Value |
+|------|------|
+| Ensemble AUC | 0.79 |
+
+#### Routing Performance
+
+| Routing Metric | Baseline | ML Routing |
+|------|------|------|
+| Avg Route Reliability | 0.658 | **0.723** |
+| Avg Hop Count | 3.75 | 3.82 |
+
+**Reliability improvement:** ~9.8%
+
+The ML-assisted routing consistently avoids unstable links and selects routes with higher reliability.
+
+Detailed evaluation plots are available in:
+
+```bash
+notebooks/evaluate_routing.ipynb
+```
+
+---
+
+## Future work
+
+- Incorporating wireless signal features (RSSI, link duration, signal strength).
+- Exploring reinforcement learning–based routing.
+- Evaluating performance on larger network sizes.
+- Integrating reliability prediction directly into NS-3 routing protocols.
+
+---
+
+## References
+
+[Add primary research paper]
+
+
+<!-- ---
+
+## TL;DR
+
+| Problem | Solution |
+|-------|-------|
+| MANET links are unstable and shortest-path routing ignores link quality | Predict link failures using ML and route packets through the most reliable paths | -->
