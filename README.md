@@ -2,10 +2,10 @@
 
 <p align="center">
 
+<img src="https://img.shields.io/badge/Simulation-NS--3-green">
 <img src="https://img.shields.io/badge/Python-3.11-blue?logo=python">
 <img src="https://img.shields.io/badge/Framework-TensorFlow-orange?logo=tensorflow">
 <img src="https://img.shields.io/badge/ML-ScikitLearn-F7931E?logo=scikitlearn">
-<img src="https://img.shields.io/badge/Simulation-NS--3-green">
 <img src="https://img.shields.io/badge/Visualization-Matplotlib-blue">
 
 </p>
@@ -18,28 +18,24 @@ Predicting unreliable wireless links to choose more stable routes in mobile netw
 
 ## Project Overview
 
-Mobile Ad Hoc Networks (MANETs) are decentralized wireless networks where nodes communicate directly without fixed infrastructure. Because nodes are constantly moving, wireless links frequently degrade or fail.
+Mobile Ad Hoc Networks (MANETs) are wireless networks where nodes communicate without fixed infrastructure. Since the nodes keep moving, links often become weak or break over time.
 
-Traditional routing algorithms (like shortest-path routing) assume all links are equally reliable. In highly dynamic MANET environments, this assumption often leads to unstable routes and frequent packet loss.
+Traditional shortest-path routing treats all links the same, which can lead to unstable routes and packet loss in dynamic MANETs.
 
-**RouteCast** introduces a machine learning–assisted routing approach that predicts link reliability and integrates those predictions into routing decisions.
+RouteCast addresses this by predicting link reliability with machine learning and using those predictions to guide routing decisions.
 
-The pipeline combines:
+The system combines:
 
-- **NS-3 network simulation** to generate realistic MANET mobility traces  
+- **NS-3 network simulation** to generate MANET mobility data
 - **Machine learning models** to predict link reliability  
-- **Reliability-weighted routing** to avoid unstable links  
+- **Reliability-weighted routing** to prefer more stable paths
 
-By incorporating predicted link reliability into routing decisions, the system can select **more stable routes compared to traditional shortest-path routing.**
-
+This helps RouteCast choose routes that are generally **more stable** than standard shortest-path routing.
 ---
 
 ## Demo
 
-*(Add your animation GIF here)*
-
-
-`![demo](assets/demo.gif)`
+![demo](assets/animation.gif)
 
 <table align="center">
   <tr>
@@ -66,15 +62,13 @@ By incorporating predicted link reliability into routing decisions, the system c
 ---
 
 ## Architecture
-Add the architecture image at `assets/architecture.jpg`. 
+Add the architecture image at `assets/architecture.png`. 
 
-Flow (left → right):  
-`ns-3 simulation → dataset (XML→CSV) → feature extraction (neighbor_count, x, y, t) → RandomForest & NeuralNet → ensemble → reliability-weighted Dijkstra → visualization (Matplotlib / NetAnim)`
+![architecture](assets/architecture.png)
 
-Also add:
-1️⃣ **Architecture diagram**  
-2️⃣ **Routing animation GIF**  
-3️⃣ **Reliability comparison plot**
+<!-- Also add: Reliability comparison plot -->
+![architecture](assets/reliability_vs_time.png)
+
 
 ---
 
@@ -144,15 +138,15 @@ If you want to re-run simulations with your local ns-3:
 
 ## Key Contributions
 
-• Built a full pipeline from **network simulation → dataset generation → ML model training → routing evaluation**
+- Built a full pipeline from **network simulation → dataset generation → ML model training → routing evaluation**
 
-• Designed an **ensemble model (Random Forest + Neural Network)** to predict MANET link reliability
+- Designed an **ensemble model (Random Forest + Neural Network)** to predict MANET link reliability
 
-• Integrated ML predictions into **reliability-weighted Dijkstra routing**
+- Integrated ML predictions into **reliability-weighted Dijkstra routing**
 
-• Demonstrated **~10% improvement in route reliability** over traditional shortest-path routing
+- Demonstrated **~10% improvement in route reliability** over traditional shortest-path routing
 
-• Developed a **dynamic MANET topology visualization** to compare routing strategies
+- Developed a **dynamic MANET topology visualization** to compare routing strategies
 
 ---
 
@@ -194,13 +188,3 @@ notebooks/evaluate_routing.ipynb
 
 ## References
 
-[Add primary research paper]
-
-
-<!-- ---
-
-## TL;DR
-
-| Problem | Solution |
-|-------|-------|
-| MANET links are unstable and shortest-path routing ignores link quality | Predict link failures using ML and route packets through the most reliable paths | -->
