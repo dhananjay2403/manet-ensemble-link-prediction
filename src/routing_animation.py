@@ -73,8 +73,7 @@ class MANETAnimation:
 
             for (u, v), r in zip(edge_pairs, reliabilities):
 
-                # weight = 1 / (float(r) + 1e-6)            # w = 1/R
-                weight = -np.log(float(r) + 1e-6)           # w = -log(R + ε)
+                weight = -np.log(float(r) + 1e-6)
 
                 G.add_edge(u, v, weight = weight, reliability=float(r))
 
@@ -99,11 +98,13 @@ class MANETAnimation:
 
     def animate(self):
 
-        fig, ax = plt.subplots(figsize = (8, 6))
+        fig, ax = plt.subplots(figsize = (9, 7))
 
         def update(frame):
 
             ax.clear()
+            ax.set_xlim(0, 500)
+            ax.set_ylim(0, 500)
 
             t = self.times[frame]
 
@@ -121,7 +122,7 @@ class MANETAnimation:
 
             # ML reliability path
             try:
-                ml_path = nx.shortest_path(G, source, target, weight="weight")
+                ml_path = nx.shortest_path(G, source, target, weight = "weight")
             except nx.NetworkXNoPath:
                 ml_path = None
 
@@ -144,12 +145,20 @@ class MANETAnimation:
                 self.time_points.append(t)
 
 
-            # Draw nodes
-            nx.draw_networkx_nodes(G, pos, node_size = 150, ax = ax)
+            # DRAW NODES 
+            nx.draw_networkx_nodes(
+                G,
+                pos,
+                node_size = 200,
+                node_color = "#9ecae1",   # lighter blue
+                edgecolors = "black",
+                linewidths = 0.6,
+                ax = ax
+            )
 
-            # Edge coloring by reliability
+
+            # DRAW EDGES 
             edge_colors = []
-            edge_widths = []
 
             for u, v, data in G.edges(data = True):
 
@@ -157,26 +166,22 @@ class MANETAnimation:
 
                 if r > 0.8:
                     edge_colors.append("green")
-                    edge_widths.append(2)
-
                 elif r > 0.5:
                     edge_colors.append("orange")
-                    edge_widths.append(1.5)
-
                 else:
                     edge_colors.append("red")
-                    edge_widths.append(0.8)
 
             nx.draw_networkx_edges(
                 G,
                 pos,
-                edge_color=edge_colors,
-                width=edge_widths,
-                alpha=0.5,
-                ax=ax
+                edge_color = edge_colors,
+                width = 1,          # uniform thin edges
+                alpha = 0.6,
+                ax = ax
             )
 
-            # Draw baseline route (purple)
+
+            # BASELINE ROUTE 
             if baseline_path:
 
                 baseline_edges = list(zip(baseline_path[:-1], baseline_path[1:]))
@@ -184,13 +189,14 @@ class MANETAnimation:
                 nx.draw_networkx_edges(
                     G,
                     pos,
-                    edgelist=baseline_edges,
-                    width=2,
-                    edge_color="purple",
-                    ax=ax
+                    edgelist = baseline_edges,
+                    width = 2.5,
+                    edge_color = "#ff66cc",
+                    ax = ax
                 )
 
-            # Draw ML route (blue)
+
+            # ML ROUTE 
             if ml_path:
 
                 ml_edges = list(zip(ml_path[:-1], ml_path[1:]))
@@ -204,13 +210,54 @@ class MANETAnimation:
                     ax = ax
                 )
 
-            nx.draw_networkx_labels(G, pos, font_size = 8, ax = ax)
 
-            ax.set_title(
-                f"MANET Routing | time = {t} | blue = ML route | purple = baseline"
+            # NODE LABELS 
+            nx.draw_networkx_labels(
+                G,
+                pos,
+                font_size = 8,
+                font_color = "black",
+                ax = ax
             )
 
-            ax.axis("off")
+
+            # GRID 
+            ax.grid(True, linestyle = "--", alpha = 0.3)
+
+
+            # LEGEND PANEL 
+            legend_text = (
+                "Legend\n\n"
+                "Blue Path      : ML-selected route\n"
+                "Pink Path      : Baseline shortest-hop\n"
+                "Green Edge     : High reliability\n"
+                "Orange Edge    : Medium reliability\n"
+                "Red Edge       : Low reliability\n"
+                f"\nTime Step      : {t}"
+            )
+
+            ax.text(
+                0.02,
+                0.98,
+                legend_text,
+                transform = ax.transAxes,
+                fontsize = 9,
+                verticalalignment = "top",
+                bbox = dict(
+                    boxstyle = "round,pad=0.5",
+                    facecolor = "white",
+                    edgecolor = "black",
+                    alpha = 0.9
+                )
+            )
+
+
+            # TITLE 
+            ax.set_title("MANET Routing", fontsize = 16, pad = 15)
+
+
+            ax.set_xlabel("X Position")
+            ax.set_ylabel("Y Position")
 
 
         anim = FuncAnimation(
@@ -223,8 +270,7 @@ class MANETAnimation:
         plt.show()
 
 
-        # Reliability comparison plot 
-
+        # RELIABILITY COMPARISON PLOT 
         plt.figure(figsize = (8,5))
 
         plt.plot(
@@ -238,7 +284,7 @@ class MANETAnimation:
             self.time_points,
             self.baseline_scores,
             label = "Baseline Routing",
-            color = "purple"
+            color = "#ff66cc"
         )
 
         plt.xlabel("Time")
