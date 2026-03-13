@@ -59,16 +59,14 @@ This helps RouteCast choose routes that are generally **more stable** than stand
   </tr>
 </table>
 
+<!-- Reliability comparison plot -->
+![architecture](assets/reliability_vs_time.jpg)
+
 ---
 
 ## Architecture
-Add the architecture image at `assets/architecture.png`. 
 
-![architecture](assets/architecture.png)
-
-<!-- Also add: Reliability comparison plot -->
-![architecture](assets/reliability_vs_time.png)
-
+![architecture](assets/architecture.JPG)
 
 ---
 
@@ -183,8 +181,4 @@ notebooks/evaluate_routing.ipynb
 - Exploring reinforcement learning–based routing.
 - Evaluating performance on larger network sizes.
 - Integrating reliability prediction directly into NS-3 routing protocols.
-
----
-
-## References
 
