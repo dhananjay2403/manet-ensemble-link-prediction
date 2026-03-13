@@ -31,6 +31,7 @@ The system combines:
 - **Reliability-weighted routing** to prefer more stable paths
 
 This helps RouteCast choose routes that are generally **more stable** than standard shortest-path routing.
+
 ---
 
 ## Demo
@@ -66,7 +67,7 @@ This helps RouteCast choose routes that are generally **more stable** than stand
 
 ## Architecture
 
-![architecture](assets/architecture.JPG)
+![architecture](assets/architecture.jpeg)
 
 ---
 
