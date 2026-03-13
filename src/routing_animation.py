@@ -25,7 +25,7 @@ class MANETAnimation:
         self.time_points = []
 
 
-    def build_graph(self, snapshot, radius=100):
+    def build_graph(self, snapshot, radius = 100):
 
         G = nx.Graph()
 
@@ -73,9 +73,10 @@ class MANETAnimation:
 
             for (u, v), r in zip(edge_pairs, reliabilities):
 
-                weight = 1 / (float(r) + 1e-6)
+                # weight = 1 / (float(r) + 1e-6)            # w = 1/R
+                weight = -np.log(float(r) + 1e-6)           # w = -log(R + ε)
 
-                G.add_edge(u, v, weight=weight, reliability=float(r))
+                G.add_edge(u, v, weight = weight, reliability=float(r))
 
         return G
 
@@ -98,7 +99,7 @@ class MANETAnimation:
 
     def animate(self):
 
-        fig, ax = plt.subplots(figsize=(8, 6))
+        fig, ax = plt.subplots(figsize = (8, 6))
 
         def update(frame):
 
@@ -144,13 +145,13 @@ class MANETAnimation:
 
 
             # Draw nodes
-            nx.draw_networkx_nodes(G, pos, node_size=150, ax=ax)
+            nx.draw_networkx_nodes(G, pos, node_size = 150, ax = ax)
 
             # Edge coloring by reliability
             edge_colors = []
             edge_widths = []
 
-            for u, v, data in G.edges(data=True):
+            for u, v, data in G.edges(data = True):
 
                 r = data["reliability"]
 
@@ -197,16 +198,16 @@ class MANETAnimation:
                 nx.draw_networkx_edges(
                     G,
                     pos,
-                    edgelist=ml_edges,
-                    width=3,
-                    edge_color="blue",
-                    ax=ax
+                    edgelist = ml_edges,
+                    width = 3,
+                    edge_color = "blue",
+                    ax = ax
                 )
 
-            nx.draw_networkx_labels(G, pos, font_size=8, ax=ax)
+            nx.draw_networkx_labels(G, pos, font_size = 8, ax = ax)
 
             ax.set_title(
-                f"MANET Routing | time={t} | blue=ML route | purple=baseline"
+                f"MANET Routing | time = {t} | blue = ML route | purple = baseline"
             )
 
             ax.axis("off")
@@ -215,8 +216,8 @@ class MANETAnimation:
         anim = FuncAnimation(
             fig,
             update,
-            frames=len(self.times),
-            interval=500
+            frames = len(self.times),
+            interval = 500
         )
 
         plt.show()
@@ -224,20 +225,20 @@ class MANETAnimation:
 
         # Reliability comparison plot 
 
-        plt.figure(figsize=(8,5))
+        plt.figure(figsize = (8,5))
 
         plt.plot(
             self.time_points,
             self.ml_scores,
-            label="ML Routing",
-            color="blue"
+            label = "ML Routing",
+            color = "blue"
         )
 
         plt.plot(
             self.time_points,
             self.baseline_scores,
-            label="Baseline Routing",
-            color="purple"
+            label = "Baseline Routing",
+            color = "purple"
         )
 
         plt.xlabel("Time")

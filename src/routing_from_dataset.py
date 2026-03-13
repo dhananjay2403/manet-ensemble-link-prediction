@@ -71,9 +71,10 @@ class DatasetRouter:
 
         for (u,v), r in zip(edge_pairs, reliabilities):
 
-            weight = 1 / (float(r) + 1e-6)
+            # weight = 1 / (float(r) + 1e-6)        # w = 1/R
+            weight = -np.log(float(r) + 1e-6)       # w = -log(R + ε)
 
-            G.add_edge(u, v, weight=weight, reliability = float(r))
+            G.add_edge(u, v, weight = weight, reliability = float(r))
 
         return G
 
